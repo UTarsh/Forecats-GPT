@@ -25,7 +25,7 @@ mlops_forecasting/
     api.py
   requirements.txt
   requirements-train.txt
-  vercel.json
+  .vercelignore
   README.md
 ```
 
@@ -100,7 +100,7 @@ This runs: ingest -> train -> drift check.
 
 This repo includes:
 - `app.py` as the Vercel Python function entrypoint
-- `vercel.json` for function bundling rules
+- `.vercelignore` to skip local-only heavy folders
 - slim `requirements.txt` for inference-only runtime packages
 
 ### Deploy steps
