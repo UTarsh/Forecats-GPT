@@ -1,5 +1,5 @@
 """
-Natural-language layer over the XGBoost demand model.
+Natural-language layer over the demand forecasting model.
 
 No external AI API required — this module uses regex to pull dates, prices,
 promos, and stockout flags from free-text questions, runs the model, and
@@ -21,7 +21,7 @@ PREDICTION_KEYWORDS = [
     "expect", "projection", "estimate",
 ]
 
-HELP_MESSAGE = """Hi! I'm your **demand forecasting assistant**, powered by XGBoost.
+HELP_MESSAGE = """Hi! I'm your **demand forecasting assistant**.
 
 Ask me things like:
 
@@ -30,7 +30,7 @@ Ask me things like:
 - *"How many units if we're out of stock next Monday?"*
 - *"What if we run a promotion today at $19.99?"*
 
-I'll run the XGBoost model and explain the results in plain English!"""
+I'll run the forecasting model and explain the results in plain English!"""
 
 
 # ── Date parser ───────────────────────────────────────────────────────────────

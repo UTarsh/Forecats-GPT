@@ -37,6 +37,9 @@ python -m venv .venv
 pip install -r requirements-train.txt
 ```
 
+`requirements.txt` is intentionally minimal for Vercel runtime.
+`requirements-train.txt` includes heavier ML/training dependencies for local development.
+
 ## 2) Generate synthetic data
 
 ```bash
@@ -120,6 +123,13 @@ vercel --prod
   - `POST /chat`
   - `POST /predict`
   - `GET /health`
+
+### Runtime behavior on Vercel
+
+On constrained serverless runtimes, heavy ML dependencies may be unavailable.
+The API automatically falls back to a lightweight heuristic forecaster and reports mode in `/health`:
+- `runtime_mode: "model"` means your saved model is loaded
+- `runtime_mode: "heuristic"` means fallback mode is active
 
 ## Next improvements
 

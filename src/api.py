@@ -8,17 +8,17 @@ from pydantic import BaseModel, Field
 
 try:
     from src.predict import load_model, predict_one
-    from src.predict import MODEL_PATH
+    from src.predict import MODEL_PATH, runtime_mode, runtime_reason
     from src.chat import process_message
 except ImportError:
     from predict import load_model, predict_one
-    from predict import MODEL_PATH
+    from predict import MODEL_PATH, runtime_mode, runtime_reason
     from chat import process_message
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    load_model()   # load XGBoost model once at startup
+    load_model()   # load trained model once at startup, fallback to heuristic if needed
     yield
 
 
@@ -45,9 +45,13 @@ def root():
 
 @app.get("/health")
 def health() -> dict:
-    if not MODEL_PATH.exists():
-        raise HTTPException(status_code=503, detail="Model not loaded. Run training first.")
-    return {"status": "ok", "model": MODEL_PATH.name}
+    return {
+        "status": "ok",
+        "model_file": MODEL_PATH.name,
+        "model_exists": MODEL_PATH.exists(),
+        "runtime_mode": runtime_mode(),  # "model" or "heuristic"
+        "runtime_reason": runtime_reason(),
+    }
 
 
 # ── JSON prediction endpoint (for direct API use) ─────────────────────────────
@@ -88,7 +92,7 @@ class ChatResponse(BaseModel):
 @app.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest) -> ChatResponse:
     """
-    Accept a plain-English question, parse it, run XGBoost, return a
+    Accept a plain-English question, parse it, run forecasting inference, return a
     natural-language explanation of the prediction.
     """
     if not payload.message.strip():

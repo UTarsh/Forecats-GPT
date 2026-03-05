@@ -1,3 +1,9 @@
 -r requirements.txt
+numpy
+pandas
+scikit-learn
+joblib
+xgboost
+uvicorn
 mlflow
 prefect
